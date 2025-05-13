@@ -50,7 +50,7 @@ const Home: React.FC = () => {
               ChillPrep
             </span>{" "}
             <span className={theme === "dark" ? "text-white" : "text-gray-900"}>
-              Your One-Stop Resource for Software Interview Prep
+              Your One-Stop Resource for Software Internship Prep
             </span>
           </h1>
           <p
@@ -59,7 +59,7 @@ const Home: React.FC = () => {
             }`}
           >
             Curated resources for DSA, system design, and core CS subjects to
-            help you ace your software engineering interviews.
+            help you ace your software interviews (For now internships).
           </p>
           <div className="flex flex-wrap gap-4">
             <Link
