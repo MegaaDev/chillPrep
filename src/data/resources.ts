@@ -1,0 +1,411 @@
+import { Resource } from "../types";
+
+export const dsaResources: Resource[] = [
+  // Arrays resources
+  {
+    id: "1",
+    topicId: "arrays",
+    subtopic: "Complete Array Playlist",
+    title: "Arrays in Data Structures and Algorithms",
+    description: "Important patterns will be covered in the long videos of his",
+    url: "https://www.youtube.com/watch?v=37E9ckMDdTk&list=PLgUwDviBIf0rENwdL0nEH0uGom9no0nyB",
+    author: "Striver",
+    type: "video",
+    difficulty: "Easy",
+  },
+  {
+    id: "2",
+    topicId: "arrays",
+    subtopic: "Must solves",
+    title: "Arrays - Must solve problems",
+    description:
+      "Simple problems but important to understand the patterns and techniques.",
+    url: "https://leetcode.com/explore/interview/card/top-interview-questions-easy/92/array/",
+    author: "Leetcode",
+    type: "article",
+    difficulty: "Easy",
+  },
+  {
+    id: "3",
+    topicId: "arrays",
+    subtopic: "Problems to master",
+    title: "Classic Array problems",
+    description:
+      "Solve until medium section to have a good grasp of the topic.",
+    url: "https://www.geeksforgeeks.org/top-50-array-coding-problems-for-interviews/",
+    author: "GFG",
+    type: "article",
+    difficulty: "Medium",
+  },
+  // {
+  //   id: "4",
+  //   topicId: "arrays",
+  //   subtopic: "Two Pointers",
+  //   title: "Two Pointers Technique",
+  //   description:
+  //     "Learn how to effectively use the two pointers technique to solve array problems efficiently.",
+  //   url: "https://leetcode.com/articles/two-pointer-technique/",
+  //   author: "LeetCode",
+  //   type: "article",
+  //   difficulty: "Medium",
+  // },
+
+  // Linked Lists
+  {
+    id: "5",
+    topicId: "linked-lists",
+    subtopic: "Complete Linked List Playlist",
+    title: "Linked List - Striver",
+    description: "Easy topic but not to be skipped, important for interviews.",
+    url: "https://www.youtube.com/watch?v=cg6JGiXhQ9c&list=PLgUwDviBIf0rAuz8tVcM0AymmhTRsfaLU",
+    author: "Striver",
+    type: "video",
+    difficulty: "Easy",
+  },
+  {
+    id: "6",
+    topicId: "linked-lists",
+    subtopic: "Problems",
+    title: "Linked List - Must solve problems",
+    description:
+      "A topic to spend less time, quickly complete these probs and move on to next topic.",
+    url: "https://leetcode.com/explore/interview/card/top-interview-questions-easy/93/linked-list",
+    author: "Leetcode",
+    type: "video",
+    difficulty: "Medium",
+  },
+
+  // Trees
+  {
+    id: "7",
+    topicId: "stacks-queues",
+    subtopic: "Stacks and Queues Playlist",
+    title: "Playlist for Stacks and Queues",
+    description:
+      "Binge watch and solve problems. This topic is interesting and important",
+    url: "https://www.youtube.com/watch?v=tqQ5fTamIN4&list=PLgUwDviBIf0pOd5zvVVSzgpo6BaCpHT9c",
+    author: "Striver",
+    type: "video",
+    difficulty: "Medium",
+  },
+  {
+    id: "8",
+    topicId: "stacks-queues",
+    subtopic: "Important topics",
+    title: "Monotonic stack",
+    description:
+      "Important topic to consider and solve problems in this pattern. Have a read and solve problems.",
+    url: "https://leetcode.com/discuss/post/2347639/a-comprehensive-guide-and-template-for-m-irii",
+    author: "Leetcode",
+    type: "article",
+    difficulty: "Medium",
+  },
+  {
+    id: "8",
+    topicId: "trees",
+    subtopic: "Complete Tree Playlist",
+    title: "Playlist for Trees",
+    description:
+      "Interesting DSA topic starts from here. Understand and try to visualize the trees, its very important",
+    url: "https://www.youtube.com/watch?v=_ANrF3FJm7I&list=PLkjdNRgDmcc0Pom5erUBU4ZayeU9AyRRu",
+    author: "Striver",
+    type: "video",
+    difficulty: "Medium",
+  },
+
+  // Graphs
+  {
+    id: "9",
+    topicId: "trees",
+    subtopic: "Classic problems",
+    title: "Standard problems to solve",
+    description:
+      "Classic problems to solve in trees. Try to solve these problems and understand the patterns",
+    url: "https://www.geeksforgeeks.org/top-50-tree-coding-problems-for-interviews/",
+    author: "GFG",
+    type: "article",
+    difficulty: "Medium",
+  },
+
+  // Extras
+  {
+    id: "11",
+    topicId: "trees",
+    subtopic: "Theory concepts",
+    title: "AVL Trees",
+    description:
+      "Interesting data structure, Try to understand implementation no need problems",
+    url: "https://www.geeksforgeeks.org/introduction-to-avl-tree/",
+    author: "GeeksforGeeks",
+    type: "article",
+    difficulty: "Hard",
+  },
+
+  {
+    id: "11",
+    topicId: "trees",
+    subtopic: "Theory concepts",
+    title: "Red black Trees",
+    description:
+      "Interesting data structure, Try to understand implementation no need problems",
+    url: "https://www.geeksforgeeks.org/introduction-to-red-black-tree/",
+    author: "GeeksforGeeks",
+    type: "article",
+    difficulty: "Hard",
+  },
+  {
+    id: "12",
+    topicId: "graphs",
+    subtopic: "Graph playlist",
+    title: "Most important Playlist",
+    description:
+      "Considered to be one of the interesting topics in DSA. Try to solve problems and understand the patterns",
+    url: "https://www.youtube.com/watch?v=M3_pLsDdeuU&list=PLgUwDviBIf0oE3gA41TKO2H5bHpPd7fzn",
+    author: "Striver",
+    type: "video",
+    difficulty: "Medium",
+  },
+  {
+    id: "13",
+    topicId: "graphs",
+    subtopic: "Problems",
+    title: "Problems to solve",
+    description: "More you solve, better you understand and easy it gets",
+    url: "https://leetcode.com/discuss/post/655708/graph-for-beginners-problems-pattern-sam-06fb/",
+    author: "Leetcode",
+    type: "article",
+    difficulty: "Hard",
+  },
+  {
+    id: "13",
+    topicId: "dynamic-programming",
+    subtopic: "Playlist",
+    title: "Dynamic Programming Playlist",
+    description: "Watch all the videos and get a grasp of the topic",
+    url: "https://www.youtube.com/watch?v=FfXoiwwnxFw&list=PLgUwDviBIf0qUlt5H_kiKYaNSqJ81PMMY",
+    author: "Striver",
+    type: "video",
+    difficulty: "Medium",
+  },
+  {
+    id: "13",
+    topicId: "dynamic-programming",
+    subtopic: "Problems",
+    title: "Problems to solve",
+    description: "More you solve, better you understand and easy it gets",
+    url: "https://leetcode.com/discuss/post/458695/dynamic-programming-patterns-by-aatalyk-pmgr/",
+    author: "Leetcode",
+    type: "article",
+    difficulty: "Hard",
+  },
+  {
+    id: "13",
+    topicId: "greedy",
+    subtopic: "Playlist",
+    title: "Greedy Algorithms Playlist",
+    description: "Watch all the videos and get a grasp of the topic",
+    url: "https://www.youtube.com/watch?v=DIX2p7vb9co&list=PLgUwDviBIf0rF1w2Koyh78zafB0cz7tea",
+    author: "Striver",
+    type: "video",
+    difficulty: "Medium",
+  },
+  {
+    id: "13",
+    topicId: "greedy",
+    subtopic: "Patterns",
+    title: "Greedy Patterns",
+    description: "Get to know a few patterns and try to solve problems",
+    url: "https://www.geeksforgeeks.org/greedy-algorithms/",
+    author: "GFG",
+    type: "article",
+    difficulty: "Medium",
+  },
+  {
+    id: "14",
+    topicId: "extras",
+    subtopic: "String Algorithms",
+    title: "KMP Algorithm",
+    description: "Important optimizing algorithms for string searching",
+    url: "https://www.youtube.com/watch?v=ziteu2FpYsA",
+    author: "Techdose",
+    type: "video",
+    difficulty: "Medium",
+  },
+  {
+    id: "14",
+    topicId: "extras",
+    subtopic: "String Algorithms",
+    title: "Rabin Karp Algorithm",
+    description: "Important optimizing algorithms for string searching",
+    url: "https://www.youtube.com/watch?v=BQ9E-2umSWc",
+    author: "Techdose",
+    type: "video",
+    difficulty: "Medium",
+  },
+];
+
+export const nonDsaResources: Resource[] = [
+  // System Design
+  {
+    id: "14",
+    topicId: "system-design",
+    subtopic: "Basics of System Design",
+    title: "System Design Primer",
+    description:
+      "A comprehensive guide to learn how to design large-scale systems with resources and examples.",
+    url: "https://github.com/donnemartin/system-design-primer",
+    author: "Donne Martin",
+    type: "github",
+    difficulty: "Medium",
+  },
+  {
+    id: "15",
+    topicId: "system-design",
+    subtopic: "Basics of System Design",
+    title: "Grokking the System Design Interview",
+    description:
+      "A step-by-step guide to master the system design interview with real-world examples.",
+    url: "https://www.educative.io/courses/grokking-the-system-design-interview",
+    author: "Educative",
+    type: "article",
+    difficulty: "Medium",
+  },
+  {
+    id: "16",
+    topicId: "system-design",
+    subtopic: "Case Studies",
+    title: "System Design: Netflix",
+    description:
+      "An in-depth look at how Netflix's architecture is designed to handle millions of users.",
+    url: "https://www.youtube.com/watch?v=psQzyFfsUGU",
+    author: "Tech Dummies",
+    type: "video",
+    difficulty: "Hard",
+  },
+
+  // DBMS
+  {
+    id: "17",
+    topicId: "dbms",
+    subtopic: "Videos",
+    title: "Complete DBMS playlist",
+    description:
+      "Watch this and try to understand the concepts. Important for interviews.",
+    url: "https://www.youtube.com/watch?v=dl00fOOYLOM",
+    author: "Babbar",
+    type: "video",
+    difficulty: "Medium",
+  },
+  {
+    id: "17",
+    topicId: "dbms",
+    subtopic: "Videos",
+    title: "Databases in depth",
+    description:
+      "Watch this and understand the internal working of databases. Very interesting",
+    url: "https://www.youtube.com/watch?v=pPqazMTzNOM",
+    author: "Keerti",
+    type: "video",
+    difficulty: "Medium",
+  },
+  {
+    id: "18",
+    topicId: "dbms",
+    subtopic: "SQL Problems",
+    title: "50 SQL Questions solved in video",
+    description:
+      "A complete guide to understanding the normalization process in database design.",
+    url: "https://www.youtube.com/watch?v=vIq9zkpGWc8",
+    author: "Babbar",
+    type: "video",
+    difficulty: "Medium",
+  },
+
+  // OOP
+  {
+    id: "19",
+    topicId: "oops",
+    subtopic: "OOP Concepts",
+    title: "Object-Oriented Programming in 7 minutes",
+    description:
+      "Quick overview of the four main OOP concepts: encapsulation, abstraction, inheritance, and polymorphism.",
+    url: "https://www.youtube.com/watch?v=pTB0EiLXUC8",
+    author: "Programming with Mosh",
+    type: "video",
+    difficulty: "Easy",
+  },
+  {
+    id: "20",
+    topicId: "os",
+    subtopic: "OS playlist",
+    title: "Easy to undersand OS playlist",
+    description:
+      "Its in hindi but easy to understand. Watch this and try to understand the concepts.",
+    url: "https://www.youtube.com/watch?v=bkSWJJZNgf8&list=PLxCzCOWd7aiGz9donHRrE9I3Mwn6XdP8p",
+    author: "Gate smashers",
+    type: "video",
+    difficulty: "Medium",
+  },
+  {
+    id: "20",
+    topicId: "os",
+    subtopic: "OS Article",
+    title: "Operating Systems - GFG",
+    description: "Always rollback to reads if videos are boring",
+    url: "https://www.geeksforgeeks.org/operating-systems/",
+    author: "GFG",
+    type: "article",
+    difficulty: "Medium",
+  },
+  {
+    id: "20",
+    topicId: "oops",
+    subtopic: "Design Patterns",
+    title: "Design Patterns for Beginners",
+    description:
+      "Learn about common design patterns and when to use them in your object-oriented code.",
+    url: "https://refactoring.guru/design-patterns",
+    author: "Refactoring Guru",
+    type: "article",
+    difficulty: "Medium",
+  },
+];
+
+export const advancedResources: Resource[] = [
+  {
+    id: "21",
+    topicId: "number-theory",
+    subtopic: "Prime Numbers",
+    title: "Prime Numbers and Primality Testing",
+    description:
+      "Advanced techniques for working with prime numbers and efficient primality testing algorithms.",
+    url: "https://cp-algorithms.com/algebra/primality_tests.html",
+    author: "CP Algorithms",
+    type: "documentation",
+    difficulty: "Hard",
+  },
+  {
+    id: "22",
+    topicId: "advanced-data-structures",
+    subtopic: "Segment Trees",
+    title: "Segment Tree Complete Guide",
+    description:
+      "Comprehensive guide to understanding and implementing segment trees for range queries.",
+    url: "https://codeforces.com/blog/entry/18051",
+    author: "Al.Cash",
+    type: "article",
+    difficulty: "Hard",
+  },
+  {
+    id: "23",
+    topicId: "game-theory",
+    subtopic: "Minimax",
+    title: "Game Theory Algorithms",
+    description:
+      "Learn about game theory algorithms and their applications in competitive programming.",
+    url: "https://www.topcoder.com/thrive/articles/Algorithm%20Games",
+    author: "TopCoder",
+    type: "article",
+    difficulty: "Hard",
+  },
+];
