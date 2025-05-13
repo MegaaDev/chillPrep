@@ -34,7 +34,7 @@ const Header: React.FC<HeaderProps> = ({ toggleSidebar }) => {
               ChillPrep
             </h1>
             <span className="ml-1 text-xs text-gray-500 dark:text-gray-400">
-              by Famr
+              for Famr
             </span>
           </Link>
         </div>

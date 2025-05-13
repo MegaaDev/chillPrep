@@ -19,7 +19,7 @@ const Footer: React.FC = () => {
             <h2 className="text-lg font-bold bg-gradient-to-r from-blue-500 to-teal-400 bg-clip-text text-transparent inline-flex items-center">
               ChillPrep{" "}
               <span className="ml-1 text-xs text-gray-500 dark:text-gray-400">
-                by Famr
+                for Famr
               </span>
             </h2>
             <p className="text-sm mt-1">
