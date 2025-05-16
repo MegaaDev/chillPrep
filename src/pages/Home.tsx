@@ -90,6 +90,20 @@ const Home: React.FC = () => {
               Explore Roadmap and boost your prep
               <ChevronRight size={18} className="ml-1" />
             </Link>
+            <Link
+              to="/faq"
+              className={`
+              inline-flex items-center px-5 py-3 rounded-lg font-medium
+              ${
+                theme === "dark"
+                  ? "bg-white hover:bg-gray-100 text-gray-900 border border-gray-300"
+                  : "bg-gray-800 hover:bg-gray-700 text-white"
+              } transition-colors duration-200
+              `}
+            >
+              FAQs
+              <ChevronRight size={18} className="ml-1" />
+            </Link>
           </div>
         </div>
       </section>
