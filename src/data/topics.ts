@@ -70,13 +70,13 @@ export const dsaTopics: Topic[] = [
     tags: ["Memoization", "Tabulation", "1D DP", "2D DP"],
   },
   {
-    id: "sorting-searching",
-    title: "Sorting & Searching",
+    id: "sorting",
+    title: "Sorting",
     icon: "layers",
     shortDescription: "Explore algorithms for efficient data organization",
     description:
-      "Master various sorting algorithms and searching techniques essential for efficient data manipulation and retrieval.",
-    tags: ["Binary Search", "Merge Sort", "Quick Sort", "Searching Algorithms"],
+      "Master various sorting algorithms essential for efficient data manipulation and retrieval.",
+    tags: ["Merge Sort (important)", "Quick Sort", "Radix Sort", "Heap Sort"],
   },
   {
     id: "greedy",

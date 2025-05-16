@@ -3,14 +3,17 @@ import {
   Check,
   AlertTriangle,
   BookOpen,
+  Code,
   RotateCcw,
   Settings,
   ArrowLeft,
+  Youtube,
 } from "lucide-react";
 import { useTheme } from "../context/ThemeContext";
 import { generatePlans } from "../data/plans";
-import { VERSION } from "../config/config";
+import { VERSION, GOOGLE_SHEET_RESOURCES } from "../config/config";
 const CURRENT_VERSION = VERSION;
+const GOOGLE_SHEET_URL = GOOGLE_SHEET_RESOURCES; // Updated URL format for CSV
 
 declare global {
   interface MicroTopic {
@@ -20,7 +23,8 @@ declare global {
     markedForRevision: boolean;
     topicId: string;
     topicType: "DSA" | "NonDSA";
-    resourceLink?: string; // Optional resource link
+    videoLink?: string; // Updated: Video link
+    articleLink?: string; // Updated: Article link
   }
 
   interface Topic {
@@ -138,7 +142,8 @@ const UpdateNotificationModal: React.FC<{
 
 const RoadmapApp: React.FC = () => {
   const { theme } = useTheme();
-  const [plans, setPlans] = useState<Plan[]>(generatePlans());
+  const [plans, setPlans] = useState<Plan[]>([]);
+  const [plansLoading, setPlansLoading] = useState<boolean>(true);
   const [selectedPlanId, setSelectedPlanId] = useState<string>("");
   const [pendingPlanId, setPendingPlanId] = useState<string>("");
   const [showPlanSelection, setShowPlanSelection] = useState<boolean>(true);
@@ -150,6 +155,7 @@ const RoadmapApp: React.FC = () => {
     {}
   );
   const [isNewUser, setIsNewUser] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
   const debugLocalStorage = () => {
     try {
@@ -307,62 +313,86 @@ const RoadmapApp: React.FC = () => {
     );
   };
 
+  // Load plans from Google Sheets
   useEffect(() => {
-    console.log("Initial load - checking localStorage");
-
-    // Check for saved plans and handle version differences
-    const savedPlans = localStorage.getItem("internship-roadmap-plans");
-    if (savedPlans) {
+    const fetchPlans = async () => {
       try {
-        const parsedPlans = JSON.parse(savedPlans) as Plan[];
-        console.log("Found saved plans in localStorage:", parsedPlans);
+        setError(null);
+        setPlansLoading(true);
 
-        // Check version of the first plan (all should have same version)
-        const oldVersion = parsedPlans[0]?.version || "0.0";
+        // Check for saved plans and handle version differences
+        const savedPlans = localStorage.getItem("internship-roadmap-plans");
 
-        if (oldVersion !== CURRENT_VERSION) {
-          console.log(
-            `Version mismatch: ${oldVersion} (saved) vs ${CURRENT_VERSION} (current)`
-          );
+        if (savedPlans) {
+          try {
+            const parsedPlans = JSON.parse(savedPlans) as Plan[];
+            console.log("Found saved plans in localStorage:", parsedPlans);
 
-          // Get fresh plans with new structure
-          const newPlans = generatePlans();
+            // Check version of the first plan (all should have same version)
+            const oldVersion = parsedPlans[0]?.version || "0.0";
 
-          // Merge old progress with new structure
-          const mergedPlans = mergePlans(parsedPlans, newPlans);
+            if (oldVersion !== CURRENT_VERSION) {
+              console.log(
+                `Version mismatch: ${oldVersion} (saved) vs ${CURRENT_VERSION} (current)`
+              );
 
-          // Update version of merged plans to current
-          mergedPlans.forEach((plan) => {
-            plan.version = CURRENT_VERSION;
-          });
+              // Get fresh plans with new structure from Google Sheets
+              const newPlans = await generatePlans(GOOGLE_SHEET_URL);
 
-          // Save the merged plans
-          setPlans(mergedPlans);
-          saveAllPlansToLocalStorage(mergedPlans);
+              // Merge old progress with new structure
+              const mergedPlans = mergePlans(parsedPlans, newPlans);
 
-          // Show update notification
-          setUpdateVersions({ old: oldVersion, new: CURRENT_VERSION });
-          setShowUpdateNotification(true);
+              // Update version of merged plans to current
+              mergedPlans.forEach((plan) => {
+                plan.version = CURRENT_VERSION;
+              });
 
-          console.log("Plan update complete - all progress has been merged");
+              // Save the merged plans
+              setPlans(mergedPlans);
+              saveAllPlansToLocalStorage(mergedPlans);
+
+              // Show update notification
+              setUpdateVersions({ old: oldVersion, new: CURRENT_VERSION });
+              setShowUpdateNotification(true);
+
+              console.log(
+                "Plan update complete - all progress has been merged"
+              );
+            } else {
+              // If versions match, use the saved plans as is
+              console.log("Version matches - using saved plans");
+              setPlans(parsedPlans);
+            }
+          } catch (e) {
+            console.error("Failed to parse saved plans", e);
+            const defaultPlans = await generatePlans(GOOGLE_SHEET_URL);
+            setPlans(defaultPlans);
+            saveAllPlansToLocalStorage(defaultPlans);
+          }
         } else {
-          // If versions match, use the saved plans as is
-          console.log("Version matches - using saved plans");
-          setPlans(parsedPlans);
+          console.log(
+            "No saved plans found, initializing with defaults from Google Sheets"
+          );
+          const defaultPlans = await generatePlans(GOOGLE_SHEET_URL);
+          setPlans(defaultPlans);
+          saveAllPlansToLocalStorage(defaultPlans);
         }
-      } catch (e) {
-        console.error("Failed to parse saved plans", e);
-        const defaultPlans = generatePlans();
-        setPlans(defaultPlans);
-        saveAllPlansToLocalStorage(defaultPlans);
-      }
-    } else {
-      console.log("No saved plans found, initializing with defaults");
-      const defaultPlans = generatePlans();
-      setPlans(defaultPlans);
-      saveAllPlansToLocalStorage(defaultPlans);
-    }
 
+        setPlansLoading(false);
+      } catch (error) {
+        console.error("Error fetching plans:", error);
+        setError(
+          "Failed to load plans. Please check your internet connection and try again."
+        );
+        setPlansLoading(false);
+      }
+    };
+
+    fetchPlans();
+  }, []);
+
+  // Load user preferences
+  useEffect(() => {
     const savedPlanId = localStorage.getItem(
       "internship-roadmap-selected-plan"
     );
@@ -579,18 +609,72 @@ const RoadmapApp: React.FC = () => {
     return total > 0 ? Math.round((completed / total) * 100) : 0;
   };
 
-  // Function to get resource link
-  const getResourceLink = (microTopic: MicroTopic) => {
-    // If a custom resource link is provided, use it
-    if (microTopic.resourceLink) {
-      return microTopic.resourceLink;
-    }
-
-    // Otherwise use the default path
-    return `/${microTopic.topicType === "DSA" ? "dsa" : "non-dsa"}/${
-      microTopic.topicId
-    }`;
+  // Updated function to get resource links
+  const getResourceLinks = (microTopic: MicroTopic) => {
+    return {
+      // Only return non-empty strings as valid links
+      videoLink:
+        microTopic.videoLink && microTopic.videoLink.trim()
+          ? microTopic.videoLink
+          : null,
+      articleLink:
+        microTopic.articleLink && microTopic.articleLink.trim()
+          ? microTopic.articleLink
+          : null,
+      defaultLink:
+        (!microTopic.videoLink || !microTopic.videoLink.trim()) &&
+        (!microTopic.articleLink || !microTopic.articleLink.trim())
+          ? `/${microTopic.topicType === "DSA" ? "dsa" : "non-dsa"}/${
+              microTopic.topicId
+            }`
+          : null,
+    };
   };
+
+  // Show loading state
+  if (plansLoading) {
+    return (
+      <div
+        className={`min-h-screen flex items-center justify-center ${
+          theme === "dark"
+            ? "bg-gray-900 text-white"
+            : "bg-gray-50 text-gray-900"
+        }`}
+      >
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-lg">Loading your roadmap...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show error state
+  if (error) {
+    return (
+      <div
+        className={`min-h-screen flex items-center justify-center ${
+          theme === "dark"
+            ? "bg-gray-900 text-white"
+            : "bg-gray-50 text-gray-900"
+        }`}
+      >
+        <div className="text-center max-w-md p-6 rounded-lg shadow-md bg-red-50 dark:bg-red-900 dark:bg-opacity-20">
+          <AlertTriangle size={48} className="mx-auto mb-4 text-red-500" />
+          <h2 className="text-xl font-bold text-red-600 dark:text-red-400 mb-2">
+            Error Loading Roadmap
+          </h2>
+          <p className="mb-4 text-gray-800 dark:text-gray-200">{error}</p>
+          <button
+            onClick={() => window.location.reload()}
+            className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
+          >
+            Try Again
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div
@@ -838,34 +922,75 @@ const RoadmapApp: React.FC = () => {
                                       </span>
                                     </div>
                                     <div className="flex items-center space-x-2">
-                                      {/* Use custom resource link if available */}
-                                      <a
-                                        href={getResourceLink(microTopic)}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className={`px-2 py-1 text-xs rounded ${
-                                          theme === "dark"
-                                            ? "bg-blue-900 text-blue-200 hover:bg-blue-800"
-                                            : "bg-blue-100 text-blue-800 hover:bg-blue-200"
-                                        }`}
-                                        onClick={(e) => {
-                                          e.stopPropagation();
-                                          // For external links, let browser handle. For internal links, use router
-                                          if (microTopic.resourceLink) {
-                                            window.open(
-                                              microTopic.resourceLink,
-                                              "_blank"
-                                            );
-                                            return false;
-                                          }
-                                        }}
-                                      >
-                                        <BookOpen
-                                          size={12}
-                                          className="inline mr-1"
-                                        />
-                                        Resource
-                                      </a>
+                                      {/* Resource links - updated with new icons */}
+                                      {(() => {
+                                        const links =
+                                          getResourceLinks(microTopic);
+                                        return (
+                                          <>
+                                            {/* Video Link - Now with YouTube icon only */}
+                                            {links.videoLink && (
+                                              <a
+                                                href={links.videoLink}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className={`px-2 py-1 text-xs rounded ${
+                                                  theme === "dark"
+                                                    ? "bg-purple-900 text-purple-200 hover:bg-purple-800"
+                                                    : "bg-purple-100 text-purple-800 hover:bg-purple-200"
+                                                }`}
+                                                onClick={(e) => {
+                                                  e.stopPropagation();
+                                                }}
+                                                title="Video"
+                                              >
+                                                <Youtube size={14} />
+                                              </a>
+                                            )}
+
+                                            {/* Article Link - Now with Code icon only */}
+                                            {links.articleLink && (
+                                              <a
+                                                href={links.articleLink}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className={`px-2 py-1 text-xs rounded ${
+                                                  theme === "dark"
+                                                    ? "bg-blue-900 text-blue-200 hover:bg-blue-800"
+                                                    : "bg-blue-100 text-blue-800 hover:bg-blue-200"
+                                                }`}
+                                                onClick={(e) => {
+                                                  e.stopPropagation();
+                                                }}
+                                                title="Article"
+                                              >
+                                                <Code size={14} />
+                                              </a>
+                                            )}
+
+                                            {/* Default Link - Still with BookOpen icon only */}
+                                            {links.defaultLink && (
+                                              <a
+                                                href={links.defaultLink}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className={`px-2 py-1 text-xs rounded ${
+                                                  theme === "dark"
+                                                    ? "bg-green-900 text-green-200 hover:bg-green-800"
+                                                    : "bg-green-100 text-green-800 hover:bg-green-200"
+                                                }`}
+                                                onClick={(e) => {
+                                                  e.stopPropagation();
+                                                }}
+                                                title="Resource"
+                                              >
+                                                <BookOpen size={14} />
+                                              </a>
+                                            )}
+                                          </>
+                                        );
+                                      })()}
+
                                       <button
                                         onClick={(e) => {
                                           e.stopPropagation();
@@ -973,42 +1098,84 @@ const RoadmapApp: React.FC = () => {
                                       </span>
                                     </div>
                                     <div className="flex items-center space-x-2">
-                                      {/* Use custom resource link if available */}
-                                      <a
-                                        href={
-                                          microTopic.resourceLink ||
-                                          `/${
-                                            microTopic.topicType === "DSA"
-                                              ? "dsa"
-                                              : "non-dsa"
-                                          }/${microTopic.topicId}`
-                                        }
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className={`px-2 py-1 text-xs rounded ${
-                                          theme === "dark"
-                                            ? "bg-indigo-900 text-indigo-200 hover:bg-indigo-800"
-                                            : "bg-indigo-100 text-indigo-800 hover:bg-indigo-200"
-                                        }`}
-                                        onClick={(e) => {
-                                          e.stopPropagation();
-                                          // For external links, let browser handle. For internal links, use router
-                                          if (microTopic.resourceLink) {
-                                            e.preventDefault();
-                                            window.open(
-                                              microTopic.resourceLink,
-                                              "_blank"
-                                            );
-                                            return false;
-                                          }
-                                        }}
-                                      >
-                                        <BookOpen
-                                          size={12}
-                                          className="inline mr-1"
-                                        />
-                                        Resource
-                                      </a>
+                                      {/* Resource links - updated with new icons */}
+                                      {(() => {
+                                        const links =
+                                          getResourceLinks(microTopic);
+                                        return (
+                                          <>
+                                            {/* Video Link - Now with YouTube icon */}
+                                            {links.videoLink && (
+                                              <a
+                                                href={links.videoLink}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className={`px-2 py-1 text-xs rounded ${
+                                                  theme === "dark"
+                                                    ? "bg-purple-900 text-purple-200 hover:bg-purple-800"
+                                                    : "bg-purple-100 text-purple-800 hover:bg-purple-200"
+                                                }`}
+                                                onClick={(e) => {
+                                                  e.stopPropagation();
+                                                }}
+                                              >
+                                                <Youtube
+                                                  size={12}
+                                                  className="inline mr-1"
+                                                />
+                                                Video
+                                              </a>
+                                            )}
+
+                                            {/* Article Link - Now with Code icon */}
+                                            {links.articleLink && (
+                                              <a
+                                                href={links.articleLink}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className={`px-2 py-1 text-xs rounded ${
+                                                  theme === "dark"
+                                                    ? "bg-blue-900 text-blue-200 hover:bg-blue-800"
+                                                    : "bg-blue-100 text-blue-800 hover:bg-blue-200"
+                                                }`}
+                                                onClick={(e) => {
+                                                  e.stopPropagation();
+                                                }}
+                                              >
+                                                <Code
+                                                  size={12}
+                                                  className="inline mr-1"
+                                                />
+                                                Article
+                                              </a>
+                                            )}
+
+                                            {/* Default Link - Still with BookOpen icon */}
+                                            {links.defaultLink && (
+                                              <a
+                                                href={links.defaultLink}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className={`px-2 py-1 text-xs rounded ${
+                                                  theme === "dark"
+                                                    ? "bg-green-900 text-green-200 hover:bg-green-800"
+                                                    : "bg-green-100 text-green-800 hover:bg-green-200"
+                                                }`}
+                                                onClick={(e) => {
+                                                  e.stopPropagation();
+                                                }}
+                                              >
+                                                <BookOpen
+                                                  size={12}
+                                                  className="inline mr-1"
+                                                />
+                                                Resource
+                                              </a>
+                                            )}
+                                          </>
+                                        );
+                                      })()}
+
                                       <button
                                         onClick={(e) => {
                                           e.stopPropagation();
@@ -1102,31 +1269,74 @@ const RoadmapApp: React.FC = () => {
                             </span>
                           </div>
                           <div className="flex items-center space-x-2">
-                            {/* Use custom resource link if available in review section */}
-                            <a
-                              href={getResourceLink(microTopic)}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className={`px-3 py-1 text-sm rounded ${
-                                theme === "dark"
-                                  ? "bg-blue-900 text-blue-200 hover:bg-blue-800"
-                                  : "bg-blue-100 text-blue-800 hover:bg-blue-200"
-                              }`}
-                              onClick={(e) => {
-                                // For external links, let browser handle. For internal links, use router
-                                if (microTopic.resourceLink) {
-                                  e.preventDefault();
-                                  window.open(
-                                    microTopic.resourceLink,
-                                    "_blank"
-                                  );
-                                  return false;
-                                }
-                              }}
-                            >
-                              <BookOpen size={14} className="inline mr-1" />
-                              View Resource
-                            </a>
+                            {/* Updated resource links in review section with new icons */}
+                            {(() => {
+                              const links = getResourceLinks(microTopic);
+                              return (
+                                <>
+                                  {/* Video Link - Now with YouTube icon only */}
+                                  {links.videoLink && (
+                                    <a
+                                      href={links.videoLink}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className={`px-3 py-1 text-sm rounded ${
+                                        theme === "dark"
+                                          ? "bg-purple-900 text-purple-200 hover:bg-purple-800"
+                                          : "bg-purple-100 text-purple-800 hover:bg-purple-200"
+                                      }`}
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                      }}
+                                      title="Video"
+                                    >
+                                      <Youtube size={16} />
+                                    </a>
+                                  )}
+
+                                  {/* Article Link - Now with Code icon only */}
+                                  {links.articleLink && (
+                                    <a
+                                      href={links.articleLink}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className={`px-3 py-1 text-sm rounded ${
+                                        theme === "dark"
+                                          ? "bg-blue-900 text-blue-200 hover:bg-blue-800"
+                                          : "bg-blue-100 text-blue-800 hover:bg-blue-200"
+                                      }`}
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                      }}
+                                      title="Article"
+                                    >
+                                      <Code size={16} />
+                                    </a>
+                                  )}
+
+                                  {/* Default Link - Still with BookOpen icon only */}
+                                  {links.defaultLink && (
+                                    <a
+                                      href={links.defaultLink}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className={`px-3 py-1 text-sm rounded ${
+                                        theme === "dark"
+                                          ? "bg-green-900 text-green-200 hover:bg-green-800"
+                                          : "bg-green-100 text-green-800 hover:bg-green-200"
+                                      }`}
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                      }}
+                                      title="Resource"
+                                    >
+                                      <BookOpen size={16} />
+                                    </a>
+                                  )}
+                                </>
+                              );
+                            })()}
+
                             <button
                               onClick={() => {
                                 const weekIndex = selectedPlan.weeks.findIndex(

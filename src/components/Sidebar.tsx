@@ -126,7 +126,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar }) => {
               <ul className="space-y-1 mt-2">
                 {[
                   { id: "timeline", title: "Timeline", path: "/roadmap" },
-                  { id: "faqs", title: "FAQs", path: "/faqs" },
+                  { id: "faqs", title: "FAQs", path: "/faq" },
                   {
                     id: "interview-companion",
                     title: "Interview Companion",

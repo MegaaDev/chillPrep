@@ -8,6 +8,8 @@ import AdvancedTopicPage from "./pages/AdvancedTopicPage";
 import InternshipPrepRoadmap from "./pages/Roadmap";
 import { ThemeProvider } from "./context/ThemeContext";
 import { dsaTopics, nonDsaTopics, advancedTopics } from "./data/topics";
+import FAQ from "./pages/FAQ";
+import InterviewCompanion from "./pages/InterviewCompanion";
 
 function App() {
   return (
@@ -17,6 +19,11 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/roadmap" element={<InternshipPrepRoadmap />} />
+            <Route path="/faq" element={<FAQ />} />
+            <Route
+              path="/interview-companion"
+              element={<InterviewCompanion />}
+            />
             {dsaTopics.map((topic) => (
               <Route
                 key={topic.id}

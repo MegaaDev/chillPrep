@@ -37,20 +37,7 @@ export const dsaResources: Resource[] = [
     type: "article",
     difficulty: "Medium",
   },
-  // {
-  //   id: "4",
-  //   topicId: "arrays",
-  //   subtopic: "Two Pointers",
-  //   title: "Two Pointers Technique",
-  //   description:
-  //     "Learn how to effectively use the two pointers technique to solve array problems efficiently.",
-  //   url: "https://leetcode.com/articles/two-pointer-technique/",
-  //   author: "LeetCode",
-  //   type: "article",
-  //   difficulty: "Medium",
-  // },
 
-  // Linked Lists
   {
     id: "5",
     topicId: "linked-lists",
@@ -123,8 +110,30 @@ export const dsaResources: Resource[] = [
     type: "video",
     difficulty: "Medium",
   },
+  {
+    id: "9",
+    topicId: "sorting",
+    subtopic: "Videos",
+    title: "youtube playlist to quickly understand",
+    description:
+      "Sorting algorithms are important to understand from interview perspective",
+    url: "https://www.youtube.com/playlist?list=PLyPvmU8zOvFl-XPak-nKr2HYMEo_fSEK_",
+    author: "Striver & Jenny",
+    type: "video",
+    difficulty: "Easy",
+  },
+  {
+    id: "9",
+    topicId: "sorting",
+    subtopic: "Classic problems",
+    title: "Top Sorting Problems to Practice",
+    description: "Essential sorting problems to master sorting algorithms",
+    url: "https://www.geeksforgeeks.org/sorting-algorithms/",
+    author: "GFG",
+    type: "article",
+    difficulty: "Easy",
+  },
 
-  // Graphs
   {
     id: "9",
     topicId: "trees",
@@ -257,6 +266,18 @@ export const dsaResources: Resource[] = [
 
 export const nonDsaResources: Resource[] = [
   // System Design
+  {
+    id: "13",
+    topicId: "system-design",
+    subtopic: "System Design Channel",
+    title: "YouTube Channel for System Design",
+    description:
+      "A YouTube channel dedicated to system design interviews and concepts.",
+    url: "  https://www.youtube.com/@hello_interview",
+    author: "Hello interview",
+    type: "video",
+    difficulty: "Medium",
+  },
   {
     id: "14",
     topicId: "system-design",
