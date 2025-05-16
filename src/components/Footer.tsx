@@ -23,7 +23,7 @@ const Footer: React.FC = () => {
               </span>
             </h2>
             <p className="text-sm mt-1">
-              Your one-stop shop for software interview preparation
+              Your one-stop shop for software internship preparation
             </p>
           </div>
 
