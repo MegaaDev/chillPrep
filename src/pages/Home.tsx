@@ -77,7 +77,7 @@ const Home: React.FC = () => {
               <ChevronRight size={18} className="ml-1" />
             </Link>
             <Link
-              to="/non-dsa/system-design"
+              to="/roadmap"
               className={`
                 inline-flex items-center px-5 py-3 rounded-lg font-medium
                 ${
@@ -87,7 +87,7 @@ const Home: React.FC = () => {
                 } transition-colors duration-200
               `}
             >
-              System Design
+              Explore Roadmap and boost your prep
               <ChevronRight size={18} className="ml-1" />
             </Link>
           </div>
