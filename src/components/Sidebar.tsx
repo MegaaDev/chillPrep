@@ -3,6 +3,8 @@ import { NavLink } from "react-router-dom";
 import {
   X,
   ChevronRight,
+  ChevronDown,
+  ChevronUp,
   FileStackIcon as CircleStackIcon,
   Code,
   Layers,
@@ -10,6 +12,7 @@ import {
   Network,
   Server,
   CheckCircle,
+  GitGraph,
 } from "lucide-react";
 import { dsaTopics, nonDsaTopics, advancedTopics } from "../data/topics";
 import { useTheme } from "../context/ThemeContext";
@@ -25,6 +28,22 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar }) => {
     const saved = localStorage.getItem("completedTopics");
     return saved ? JSON.parse(saved) : [];
   });
+
+  const [openSections, setOpenSections] = React.useState<
+    Record<string, boolean>
+  >({
+    timeline: false,
+    dsa: false,
+    nonDsa: false,
+    advanced: false,
+  });
+
+  const toggleSection = (section: string) => {
+    setOpenSections((prev) => ({
+      ...prev,
+      [section]: !prev[section],
+    }));
+  };
 
   const toggleCompletion = (topicId: string) => {
     setCompletedTopics((prev) => {
@@ -85,169 +104,270 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar }) => {
         </div>
 
         <div className="px-2 space-y-6 pb-24">
+          <div>
+            <div
+              className="flex justify-between items-center px-4 cursor-pointer"
+              onClick={() => toggleSection("timeline")}
+            >
+              <h3
+                className={`text-xs uppercase font-semibold ${
+                  theme === "dark" ? "text-gray-400" : "text-gray-500"
+                }`}
+              >
+                Megaaa HUB
+              </h3>
+              {openSections.timeline ? (
+                <ChevronUp size={16} />
+              ) : (
+                <ChevronDown size={16} />
+              )}
+            </div>
+            {openSections.timeline && (
+              <ul className="space-y-1 mt-2">
+                {[
+                  { id: "timeline", title: "Timeline", path: "/roadmap" },
+                  { id: "faqs", title: "FAQs", path: "/faqs" },
+                  {
+                    id: "interview-companion",
+                    title: "Interview Companion",
+                    path: "/interview-companion",
+                  },
+                ].map((item) => (
+                  <li key={item.id}>
+                    <div className="flex items-center">
+                      <NavLink
+                        to={item.path}
+                        className={({ isActive }) => `
+                          flex items-center flex-1 px-4 py-2 text-sm rounded-lg
+                          ${
+                            isActive
+                              ? theme === "dark"
+                                ? "bg-blue-900 bg-opacity-30 text-blue-400"
+                                : "bg-blue-100 text-blue-800"
+                              : "hover:bg-gray-700 hover:bg-opacity-20"
+                          }
+                        `}
+                        onClick={() => {
+                          if (window.innerWidth < 1024) {
+                            toggleSidebar();
+                          }
+                        }}
+                      >
+                        <span>{item.title}</span>
+                        <ChevronRight size={16} className="ml-auto" />
+                      </NavLink>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+
           {/* DSA Topics */}
           <div>
-            <h3
-              className={`px-4 text-xs uppercase font-semibold mb-2 ${
-                theme === "dark" ? "text-gray-400" : "text-gray-500"
-              }`}
+            <div
+              className="flex justify-between items-center px-4 cursor-pointer"
+              onClick={() => toggleSection("dsa")}
             >
-              DSA Topics
-            </h3>
-            <ul className="space-y-1">
-              {dsaTopics.map((topic) => (
-                <li key={topic.id}>
-                  <div className="flex items-center">
-                    <NavLink
-                      to={`/dsa/${topic.id}`}
-                      className={({ isActive }) => `
-                        flex items-center flex-1 px-4 py-2 text-sm rounded-lg
-                        ${
-                          isActive
+              <h3
+                className={`text-xs uppercase font-semibold ${
+                  theme === "dark" ? "text-gray-400" : "text-gray-500"
+                }`}
+              >
+                DSA Topics
+              </h3>
+              {openSections.dsa ? (
+                <ChevronUp size={16} />
+              ) : (
+                <ChevronDown size={16} />
+              )}
+            </div>
+            {openSections.dsa && (
+              <ul className="space-y-1 mt-2">
+                {dsaTopics.map((topic) => (
+                  <li key={topic.id}>
+                    <div className="flex items-center">
+                      <NavLink
+                        to={`/dsa/${topic.id}`}
+                        className={({ isActive }) => `
+                          flex items-center flex-1 px-4 py-2 text-sm rounded-lg
+                          ${
+                            isActive
+                              ? theme === "dark"
+                                ? "bg-blue-900 bg-opacity-30 text-blue-400"
+                                : "bg-blue-100 text-blue-800"
+                              : "hover:bg-gray-700 hover:bg-opacity-20"
+                          }
+                        `}
+                        onClick={() => {
+                          if (window.innerWidth < 1024) {
+                            toggleSidebar();
+                          }
+                        }}
+                      >
+                        <span className="mr-2">
+                          {getLucideIcon(topic.icon)}
+                        </span>
+                        <span>{topic.title}</span>
+                        <ChevronRight size={16} className="ml-auto" />
+                      </NavLink>
+                      <button
+                        onClick={() => toggleCompletion(topic.id)}
+                        className={`p-2 rounded-full ml-1 ${
+                          completedTopics.includes(topic.id)
                             ? theme === "dark"
-                              ? "bg-blue-900 bg-opacity-30 text-blue-400"
-                              : "bg-blue-100 text-blue-800"
-                            : "hover:bg-gray-700 hover:bg-opacity-20"
-                        }
-                      `}
-                      onClick={() => {
-                        if (window.innerWidth < 1024) {
-                          toggleSidebar();
-                        }
-                      }}
-                    >
-                      <span className="mr-2">{getLucideIcon(topic.icon)}</span>
-                      <span>{topic.title}</span>
-                      <ChevronRight size={16} className="ml-auto" />
-                    </NavLink>
-                    <button
-                      onClick={() => toggleCompletion(topic.id)}
-                      className={`p-2 rounded-full ml-1 ${
-                        completedTopics.includes(topic.id)
-                          ? theme === "dark"
-                            ? "text-green-400"
-                            : "text-green-600"
-                          : theme === "dark"
-                          ? "text-gray-600"
-                          : "text-gray-400"
-                      }`}
-                    >
-                      <CheckCircle size={16} />
-                    </button>
-                  </div>
-                </li>
-              ))}
-            </ul>
+                              ? "text-green-400"
+                              : "text-green-600"
+                            : theme === "dark"
+                            ? "text-gray-600"
+                            : "text-gray-400"
+                        }`}
+                      >
+                        <CheckCircle size={16} />
+                      </button>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
 
           {/* Non-DSA Topics */}
           <div>
-            <h3
-              className={`px-4 text-xs uppercase font-semibold mb-2 ${
-                theme === "dark" ? "text-gray-400" : "text-gray-500"
-              }`}
+            <div
+              className="flex justify-between items-center px-4 cursor-pointer"
+              onClick={() => toggleSection("nonDsa")}
             >
-              Non-DSA Topics
-            </h3>
-            <ul className="space-y-1">
-              {nonDsaTopics.map((topic) => (
-                <li key={topic.id}>
-                  <div className="flex items-center">
-                    <NavLink
-                      to={`/non-dsa/${topic.id}`}
-                      className={({ isActive }) => `
-                        flex items-center flex-1 px-4 py-2 text-sm rounded-lg
-                        ${
-                          isActive
+              <h3
+                className={`text-xs uppercase font-semibold ${
+                  theme === "dark" ? "text-gray-400" : "text-gray-500"
+                }`}
+              >
+                Non-DSA Topics
+              </h3>
+              {openSections.nonDsa ? (
+                <ChevronUp size={16} />
+              ) : (
+                <ChevronDown size={16} />
+              )}
+            </div>
+            {openSections.nonDsa && (
+              <ul className="space-y-1 mt-2">
+                {nonDsaTopics.map((topic) => (
+                  <li key={topic.id}>
+                    <div className="flex items-center">
+                      <NavLink
+                        to={`/non-dsa/${topic.id}`}
+                        className={({ isActive }) => `
+                          flex items-center flex-1 px-4 py-2 text-sm rounded-lg
+                          ${
+                            isActive
+                              ? theme === "dark"
+                                ? "bg-blue-900 bg-opacity-30 text-blue-400"
+                                : "bg-blue-100 text-blue-800"
+                              : "hover:bg-gray-700 hover:bg-opacity-20"
+                          }
+                        `}
+                        onClick={() => {
+                          if (window.innerWidth < 1024) {
+                            toggleSidebar();
+                          }
+                        }}
+                      >
+                        <span className="mr-2">
+                          {getLucideIcon(topic.icon)}
+                        </span>
+                        <span>{topic.title}</span>
+                        <ChevronRight size={16} className="ml-auto" />
+                      </NavLink>
+                      <button
+                        onClick={() => toggleCompletion(topic.id)}
+                        className={`p-2 rounded-full ml-1 ${
+                          completedTopics.includes(topic.id)
                             ? theme === "dark"
-                              ? "bg-blue-900 bg-opacity-30 text-blue-400"
-                              : "bg-blue-100 text-blue-800"
-                            : "hover:bg-gray-700 hover:bg-opacity-20"
-                        }
-                      `}
-                      onClick={() => {
-                        if (window.innerWidth < 1024) {
-                          toggleSidebar();
-                        }
-                      }}
-                    >
-                      <span className="mr-2">{getLucideIcon(topic.icon)}</span>
-                      <span>{topic.title}</span>
-                      <ChevronRight size={16} className="ml-auto" />
-                    </NavLink>
-                    <button
-                      onClick={() => toggleCompletion(topic.id)}
-                      className={`p-2 rounded-full ml-1 ${
-                        completedTopics.includes(topic.id)
-                          ? theme === "dark"
-                            ? "text-green-400"
-                            : "text-green-600"
-                          : theme === "dark"
-                          ? "text-gray-600"
-                          : "text-gray-400"
-                      }`}
-                    >
-                      <CheckCircle size={16} />
-                    </button>
-                  </div>
-                </li>
-              ))}
-            </ul>
+                              ? "text-green-400"
+                              : "text-green-600"
+                            : theme === "dark"
+                            ? "text-gray-600"
+                            : "text-gray-400"
+                        }`}
+                      >
+                        <CheckCircle size={16} />
+                      </button>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
 
           {/* Advanced CP Topics */}
           <div>
-            <h3
-              className={`px-4 text-xs uppercase font-semibold mb-2 ${
-                theme === "dark" ? "text-gray-400" : "text-gray-500"
-              }`}
+            <div
+              className="flex justify-between items-center px-4 cursor-pointer"
+              onClick={() => toggleSection("advanced")}
             >
-              Advanced CP
-            </h3>
-            <ul className="space-y-1">
-              {advancedTopics.map((topic) => (
-                <li key={topic.id}>
-                  <div className="flex items-center">
-                    <NavLink
-                      to={`/advanced/${topic.id}`}
-                      className={({ isActive }) => `
-                        flex items-center flex-1 px-4 py-2 text-sm rounded-lg
-                        ${
-                          isActive
+              <h3
+                className={`text-xs uppercase font-semibold ${
+                  theme === "dark" ? "text-gray-400" : "text-gray-500"
+                }`}
+              >
+                Advanced CP
+              </h3>
+              {openSections.advanced ? (
+                <ChevronUp size={16} />
+              ) : (
+                <ChevronDown size={16} />
+              )}
+            </div>
+            {openSections.advanced && (
+              <ul className="space-y-1 mt-2">
+                {advancedTopics.map((topic) => (
+                  <li key={topic.id}>
+                    <div className="flex items-center">
+                      <NavLink
+                        to={`/advanced/${topic.id}`}
+                        className={({ isActive }) => `
+                          flex items-center flex-1 px-4 py-2 text-sm rounded-lg
+                          ${
+                            isActive
+                              ? theme === "dark"
+                                ? "bg-purple-900 bg-opacity-30 text-purple-400"
+                                : "bg-purple-100 text-purple-800"
+                              : "hover:bg-gray-700 hover:bg-opacity-20"
+                          }
+                        `}
+                        onClick={() => {
+                          if (window.innerWidth < 1024) {
+                            toggleSidebar();
+                          }
+                        }}
+                      >
+                        <span className="mr-2">
+                          {getLucideIcon(topic.icon)}
+                        </span>
+                        <span>{topic.title}</span>
+                        <ChevronRight size={16} className="ml-auto" />
+                      </NavLink>
+                      <button
+                        onClick={() => toggleCompletion(topic.id)}
+                        className={`p-2 rounded-full ml-1 ${
+                          completedTopics.includes(topic.id)
                             ? theme === "dark"
-                              ? "bg-purple-900 bg-opacity-30 text-purple-400"
-                              : "bg-purple-100 text-purple-800"
-                            : "hover:bg-gray-700 hover:bg-opacity-20"
-                        }
-                      `}
-                      onClick={() => {
-                        if (window.innerWidth < 1024) {
-                          toggleSidebar();
-                        }
-                      }}
-                    >
-                      <span className="mr-2">{getLucideIcon(topic.icon)}</span>
-                      <span>{topic.title}</span>
-                      <ChevronRight size={16} className="ml-auto" />
-                    </NavLink>
-                    <button
-                      onClick={() => toggleCompletion(topic.id)}
-                      className={`p-2 rounded-full ml-1 ${
-                        completedTopics.includes(topic.id)
-                          ? theme === "dark"
-                            ? "text-green-400"
-                            : "text-green-600"
-                          : theme === "dark"
-                          ? "text-gray-600"
-                          : "text-gray-400"
-                      }`}
-                    >
-                      <CheckCircle size={16} />
-                    </button>
-                  </div>
-                </li>
-              ))}
-            </ul>
+                              ? "text-green-400"
+                              : "text-green-600"
+                            : theme === "dark"
+                            ? "text-gray-600"
+                            : "text-gray-400"
+                        }`}
+                      >
+                        <CheckCircle size={16} />
+                      </button>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
         </div>
       </aside>

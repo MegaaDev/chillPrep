@@ -71,11 +71,22 @@ export const dsaResources: Resource[] = [
       "A topic to spend less time, quickly complete these probs and move on to next topic.",
     url: "https://leetcode.com/explore/interview/card/top-interview-questions-easy/93/linked-list",
     author: "Leetcode",
-    type: "video",
+    type: "article",
     difficulty: "Medium",
   },
 
-  // Trees
+  {
+    id: "6",
+    topicId: "binary-search",
+    subtopic: "Content",
+    title: "Binary Search - ONE STOP CONTENT",
+    description:
+      "Binary search is an easy to master topic. Watch this and try to solve problems.",
+    url: "https://www.youtube.com/watch?v=_NT69eLpqks&list=PLgUwDviBIf0pMFMWuuvDNMAkoQFi-h0ZF",
+    author: "Striver",
+    type: "video",
+    difficulty: "Easy",
+  },
   {
     id: "7",
     topicId: "stacks-queues",
